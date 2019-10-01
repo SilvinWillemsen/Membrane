@@ -12,45 +12,60 @@
 #include "Membrane.h"
 
 //==============================================================================
-Membrane::Membrane (double cSq, double kappaSq, double sig0, double sig1, double k) : cSq (cSq),
+Membrane::Membrane (double cSq, double kappaSq, double sig0, double sig1, double k, double Lx, double Ly) : cSq (cSq),
                                                                                       kappaSq (kappaSq),
                                                                                       sig0 (sig0),
                                                                                       sig1 (sig1),
-                                                                                      k (k)
+                                                                                      k (k), Lx (Lx), Ly (Ly)
 {
+    h = 5.0 * 2.0 * sqrt ((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2) + 4.0 * kappaSq * k * k)) / 2.0);
     
-    h = sqrt((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2.0) + 16 * kappaSq * k * k)) / 2.0);
+//    h = sqrt((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2.0) + 16 * kappaSq * k * k)) / 2.0);
     
-    h = 0.062;
-    N = floor (aspectRatio / (h * h));
+//    h = 0.062;
+    Nx = floor (Lx/h);
+    Ny = floor (Ly/h);
+    h = Lx > Ly ? Lx / Nx : Ly / Ny;
+    N = (Nx - 1) * (Ny - 1);
+//    N = floor (aspectRatio / (h * h));
     
-    h = 1.0 / sqrt (N);
-    Nx = floor(sqrt (aspectRatio) / h);
-    Ny = floor(1.0 / (sqrt (aspectRatio) * h));
+//    h = 1.0 / sqrt (N);
+//    Nx = floor(sqrt (aspectRatio) / h);
+//    Ny = floor(1.0 / (sqrt (aspectRatio) * h));
     
     uVecs.reserve (numTimeSteps); //resize to three time steps
     
     for (int i = 0; i < numTimeSteps; ++i)
-        uVecs.push_back (std::vector<std::vector<double>> (Ny, std::vector<double>(Nx, 0)));
+        uVecs.push_back (std::vector<std::vector<double>> (Nx, std::vector<double>(Ny, 0)));
     
     
     uNext = &uVecs[0][0];
     u = &uVecs[1][0];
     uPrev = &uVecs[2][0];
     
-    
+    lambdaSq = cSq * k * k / (h * h);
     muSq = kappaSq * k * k / (h * h * h * h);
     
-    d = 1.0f / (1.0f + sig0 * k);
-    A1 = cSq * k * k / (h * h) * d;
-    B1 = -(kappaSq * k * k) / (h * h * h * h) * d;
-    B2 = B1 * 2.0f;
-    B3 = B1 * -8.0f;
-    C = (2.0f * sig1 * k) / (h * h);
-    C1 = (2.0f - 4.0f * C + 20.0f * B1) * d;
-    C2 = (sig0 * k - 1.0f + 4.0f * C) * d;
-    C3 = C * d;
-    C4 = (k * k) * d;
+    d = 1.0 / (1.0 + sig0*k);
+    // u coeffs
+    B1 = (2.0 - 4.0 * lambdaSq - 20.0 * muSq - 8.0 * sig1 * k / (h*h)) * d;
+    B2 = (-muSq) * d;
+    B3 = (-2.0 * muSq) * d;
+    B4 = ((8.0 * muSq + lambdaSq + 2.0 * sig1 * k / (h*h))) * d;
+    
+    // uPrev coeffs
+    C1 = (sig0 * k - 1 + 8.0 * sig1 * k / (h*h)) * d;
+    C2 = (-2.0 * sig1 * k / (h*h)) * d;
+//    d = 1.0f / (1.0f + sig0 * k);
+//    A1 = cSq * k * k / (h * h) * d;
+//    B1 = -(kappaSq * k * k) / (h * h * h * h) * d;
+//    B2 = B1 * 2.0f;
+//    B3 = B1 * -8.0f;
+//    C = (2.0f * sig1 * k) / (h * h);
+//    C1 = (2.0f - 4.0f * C + 20.0f * B1) * d;
+//    C2 = (sig0 * k - 1.0f + 4.0f * C) * d;
+//    C3 = C * d;
+//    C4 = (k * k) * d;
     
 }
 
@@ -81,18 +96,16 @@ void Membrane::resized()
 void Membrane::calculateFDS()
 {
     // input states and coefficients in vector form
-    for (int m = 2; m < Ny - 2; ++m)
+    for (int l = 2; l < Nx - 2; ++l)
     {
-        for (int l = 2; l < Nx - 2; ++l)
+        for (int m = 2; m < Ny - 2; ++m)
         {
-            uNext[l][m] = A1 * (u[l][m+1] + u[l][m-1] + u[l+1][m] + u[l-1][m] - 4.0 * u[l][m]) +
-            B1 * (u[l][m+2] + u[l][m-2] + u[l+2][m] + u[l-2][m])
-            + B2 * (u[l+1][m+1] + u[l-1][m+1] + u[l+1][m-1] + u[l-1][m-1])
-            + B3 * (u[l][m+1] + u[l][m-1] + u[l+1][m] + u[l-1][m])
-            + C1 * u[l][m]
-            + C2 * uPrev[l][m];
-            //                    + C3 * (u[l + (m+1) * Nx] + u[l + (m-1) * Nx] + u[l+1 + m * Nx] + u[l-1 + m * Nx] - uPrev[l + (m+1) * Nx] - uPrev[l + (m-1) * Nx] - uPrev[l+1 + m * Nx] - uPrev[l-1 + m * Nx]);
-            //            std::cout << l + m * Nx << std::endl;
+            uNext[l][m] = (B1 * u[l][m]
+                           + B2 * (u[l+2][m] + u[l-2][m] + u[l][m+2] +  u[l][m-2])
+                           + B3 * (u[l+1][m+1] + u[l+1][m-1] + u[l-1][m+1] +  u[l-1][m-1])
+                           + B4 * (u[l+1][m] + u[l-1][m] + u[l][m+1] +  u[l][m-1])
+                           + C1 * uPrev[l][m]
+                           + C2 * (uPrev[l+1][m] + uPrev[l-1][m] + uPrev[l][m+1] + uPrev[l][m-1]));
         }
     }
     

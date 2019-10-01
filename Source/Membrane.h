@@ -7,7 +7,7 @@
 class Membrane    : public Component
 {
 public:
-    Membrane (double cSq, double kappaSq, double sig0, double sig1, double k);
+    Membrane (double cSq, double kappaSq, double sig0, double sig1, double k, double Lx, double Ly);
     ~Membrane();
     
     void paint (Graphics& g) override;
@@ -32,9 +32,9 @@ public:
     bool isExcited() { return excited; };
     
 private:
-    double cSq, kappaSq, rho, E, nu, H, sig0, sig1, muSq; // material values
-    
-    double d, A1, B1, B2, B3, C, C1, C2, C3, C4;
+    double cSq, kappaSq, rho, E, nu, H, sig0, sig1, Lx, Ly; // material values
+    double lambdaSq, muSq; // courant stuffs
+    double d, A1, B1, B2, B3, B4, C, C1, C2;
     
     double k; // timestep
     

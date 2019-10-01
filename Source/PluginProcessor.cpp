@@ -99,18 +99,21 @@ void MembraneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     // initialisation that you need..
     fs = sampleRate;
     double k = 1.0 / fs;
-    double rho = 7850;
+    double rho = 10;
     double E = 2e3;
-    double H = 0.005;
+    double H = 0.001;
     double nu = 0.3;
-    double T = 10000.0;
+    double T = 100.0;
     double cSq = T / (rho * H);
     double kappaSq = E * H * H / (12.0 * rho * (1.0 - nu * nu));
     
-    double sig0 = 0.0;
-    double sig1 = 0.00;
+    double sig0 = 0.1;
+    double sig1 = 0.01;
     
-    membranes.add (new Membrane (cSq, kappaSq, sig0, sig1, k));
+    double Lx = 0.6;
+    double Ly = 0.3;
+    
+    membranes.add (new Membrane (cSq, kappaSq, sig0, sig1, k, Lx, Ly));
     
 }
 
