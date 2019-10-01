@@ -103,18 +103,19 @@ void MembraneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     double E = 2e3;
     double H = 0.001;
     double nu = 0.3;
-    double T = 100.0;
+    double T = 80.0;
     double cSq = T / (rho * H);
     double kappaSq = E * H * H / (12.0 * rho * (1.0 - nu * nu));
     
-    double sig0 = 0.0;
-    double sig1 = 0.01;
+    double sig0 = 0.1;
+    double sig1 = 0.005;
     
     double Lx = 0.3;
     double Ly = 0.3;
     
     membranes.add (new Membrane (cSq, kappaSq, sig0, sig1, k, Lx, Ly));
     
+    membranes[0]->createUpdateEq();
 }
 
 void MembraneAudioProcessor::releaseResources()
@@ -168,7 +169,7 @@ void MembraneAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffe
             
             membrane->calculateFDS();
             membrane->updateStates();
-            channelDataL[i] = clamp (membrane->getOutput (0.6, 0.5), -1.0, 1.0);
+            channelDataL[i] = clamp (membrane->getOutput (0.7, 0.5), -1.0, 1.0);
             channelDataR[i] = channelDataL[i];
 //            std::cout << channelDataL[i] << std::endl;
         }

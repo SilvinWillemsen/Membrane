@@ -1,9 +1,15 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <dlfcn.h>
+#include <string.h>
 //==============================================================================
 /*
  */
+#define ONEDVEC
+
 class Membrane    : public Component
 {
 public:
@@ -14,7 +20,11 @@ public:
     void resized() override;
     
     void calculateFDS();
-    double getOutput (double xRatio, double yRatio) {return u[static_cast<int> (xRatio * Nx)][static_cast<int> (yRatio * Ny)]; };
+#ifdef ONEDVEC
+    double getOutput (double xRatio, double yRatio) {return u[static_cast<int> (xRatio * Nx + Nx * yRatio * Ny)]; };
+#else
+    double getOutput (double xRatio, double yRatio) {return u[static_cast<int> (xRatio * Nx)][static_cast<int>(yRatio * Ny)]; };
+#endif
     void updateStates();
     
     void setImpactPosition (float xPos, float yPos);
@@ -31,6 +41,7 @@ public:
     
     bool isExcited() { return excited; };
     
+    void createUpdateEq();
 private:
     double cSq, kappaSq, rho, E, nu, H, sig0, sig1, Lx, Ly; // material values
     double lambdaSq, muSq; // courant stuffs
@@ -39,12 +50,23 @@ private:
     double k; // timestep
     
     // pointers to the different states
+#ifdef ONEDVEC
+    double* uNext;
+    double* u;
+    double* uPrev;
+#else
     std::vector<double>* uNext;
     std::vector<double>* u;
     std::vector<double>* uPrev;
-    
+#endif
+    std::vector<double> coeffs;
     // states
+#ifdef ONEDVEC
+    std::vector<std::vector<double>> uVecs;
+#else
     std::vector<std::vector<std::vector<double>>> uVecs;
+#endif
+    
     
     double aspectRatio = 1;
     int Nx;
@@ -57,5 +79,9 @@ private:
     
     bool excited = false;
     
+    int idX, idY;
+    void (*updateEq) (double* uNext, double* u, double* uPrev, double* parameters, int Nx, int Ny);
+    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Membrane)
 };

@@ -18,7 +18,7 @@ Membrane::Membrane (double cSq, double kappaSq, double sig0, double sig1, double
                                                                                       sig1 (sig1),
                                                                                       k (k), Lx (Lx), Ly (Ly)
 {
-    h = 3.0 * 2.0 * sqrt ((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2) + 4.0 * kappaSq * k * k)) / 2.0);
+    h = 4.0 * 2.0 * sqrt ((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2) + 4.0 * kappaSq * k * k)) / 2.0);
     
 //    h = sqrt((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2.0) + 16 * kappaSq * k * k)) / 2.0);
     
@@ -35,9 +35,13 @@ Membrane::Membrane (double cSq, double kappaSq, double sig0, double sig1, double
     
     uVecs.reserve (numTimeSteps); //resize to three time steps
     
+#ifdef ONEDVEC
+    for (int i = 0; i < numTimeSteps; ++i)
+        uVecs.push_back (std::vector<double> (N, 0));
+#else
     for (int i = 0; i < numTimeSteps; ++i)
         uVecs.push_back (std::vector<std::vector<double>> (Nx, std::vector<double>(Ny, 0)));
-    
+#endif
     
     uNext = &uVecs[0][0];
     u = &uVecs[1][0];
@@ -56,6 +60,14 @@ Membrane::Membrane (double cSq, double kappaSq, double sig0, double sig1, double
     // uPrev coeffs
     C1 = (sig0 * k - 1 + 8.0 * sig1 * k / (h*h)) * d;
     C2 = (-2.0 * sig1 * k / (h*h)) * d;
+    
+    coeffs.push_back(B1);
+    coeffs.push_back(B2);
+    coeffs.push_back(B3);
+    coeffs.push_back(B4);
+    coeffs.push_back(C1);
+    coeffs.push_back(C2);
+    
 //    d = 1.0f / (1.0f + sig0 * k);
 //    A1 = cSq * k * k / (h * h) * d;
 //    B1 = -(kappaSq * k * k) / (h * h * h * h) * d;
@@ -82,7 +94,11 @@ void Membrane::paint (Graphics& g)
     {
         for (int y = 2; y < Ny - 2; ++y)
         {
+#ifdef ONEDVEC
+            int cVal = clamp (255 * 0.5 * (u[x + y * Nx] * scaling + 1), 0, 255);
+#else
             int cVal = clamp (255 * 0.5 * (u[x][y] * scaling + 1), 0, 255);
+#endif
             g.setColour(Colour::fromRGBA (cVal, cVal, cVal, 127));
             g.fillRect((x - 2) * stateWidth, (y - 2) * stateHeight, stateWidth, stateHeight);
         }
@@ -96,19 +112,22 @@ void Membrane::resized()
 void Membrane::calculateFDS()
 {
     // input states and coefficients in vector form
+#ifdef ONEDVEC
+    updateEq (uNext, u, uPrev, &coeffs[0], Nx, Ny);
+#else
     for (int l = 2; l < Nx - 2; ++l)
     {
         for (int m = 2; m < Ny - 2; ++m)
         {
             uNext[l][m] = B1 * u[l][m]
-                        + B2 * (u[l+2][m] + u[l-2][m] + u[l][m+2] +  u[l][m-2])
-                        + B3 * (u[l+1][m+1] + u[l+1][m-1] + u[l-1][m+1] +  u[l-1][m-1])
-                        + B4 * (u[l+1][m] + u[l-1][m] + u[l][m+1] +  u[l][m-1])
-                        + C1 * uPrev[l][m]
-                        + C2 * (uPrev[l+1][m] + uPrev[l-1][m] + uPrev[l][m+1] + uPrev[l][m-1]);
+            + B2 * (u[l+2][m] + u[l-2][m] + u[l][m+2] +  u[l][m-2])
+            + B3 * (u[l+1][m+1] + u[l+1][m-1] + u[l-1][m+1] +  u[l-1][m-1])
+            + B4 * (u[l+1][m] + u[l-1][m] + u[l][m+1] +  u[l][m-1])
+            + C1 * uPrev[l][m]
+            + C2 * (uPrev[l+1][m] + uPrev[l-1][m] + uPrev[l][m+1] + uPrev[l][m-1]);
         }
     }
-    
+#endif
 }
 
 void Membrane::updateStates()
@@ -119,7 +138,11 @@ void Membrane::updateStates()
 //    uNextPtrIdx = (uNextPtrIdx + (lengthUVec - 1)) % lengthUVec;
 //    u[0] = &uVecs[uNextPtrIdx][0];
     
+#ifdef ONEDVEC
+    double* dummyPtr = uPrev;
+#else
     std::vector<double>* dummyPtr = uPrev;
+#endif
     uPrev = u;
     u = uNext;
     uNext = dummyPtr;
@@ -131,8 +154,13 @@ void Membrane::excite()
     if (excited)
     {
         excited = false;
-        u[static_cast<int>(0.5*Nx)][static_cast<int>(0.5 * Ny)] = 1.0;
-        uPrev[static_cast<int>(0.5*Nx)][static_cast<int>(0.5*Ny)] = 1.0;
+#ifdef ONEDVEC
+        u[idX + Nx * idY] += 1.0;
+        uPrev[idX + Nx * idY] += 1.0;
+#else
+        u[idX][idY] += 1.0;
+        uPrev[idX][idY] += 1.0;
+#endif
         
 //        int width = floor ((N * 2.0) / 5.0) / 2.0;
 //        int loc = floor (N * static_cast<float>(getXLoc()) / static_cast<float>(getWidth()));
@@ -205,8 +233,8 @@ void Membrane::mouseDown (const MouseEvent &e)
 {
     int stateWidth = getWidth() / static_cast<double> (Nx - 4);
     int stateHeight = getHeight() / static_cast<double> (Ny - 4);
-    int idX = e.x / stateWidth + 2;
-    int idY = e.y / stateHeight + 2;
+    idX = e.x / stateWidth + 2;
+    idY = e.y / stateHeight + 2;
     
 }
 void Membrane::mouseDrag (const MouseEvent& e)
@@ -223,3 +251,37 @@ void Membrane::mouseUp (const MouseEvent &e)
 {
 }
 
+void Membrane::createUpdateEq()
+{
+    void *handle;
+    char *error;
+
+    // convert updateEqString to char
+    const char* eq = " for (int l = 2; l < Nx - 2; ++l) { for (int m = 2; m < Ny - 2; ++m) { uNext[l + m * Nx] = coeffs[0] * u[l + m * Nx] + coeffs[1] * (u[l + (m-2) * Nx] + u[l + (m+2) * Nx] + u[l+2 + m * Nx] + u[l-2 + m * Nx]) + coeffs[2] * (u[l-1 + (m-1) * Nx] + u[l+1 + (m+1) * Nx] + u[l+1 + (m-1) * Nx] + u[l-1 + (m+1) * Nx]) + coeffs[3] * (u[l + (m-1) * Nx] + u[l + (m+1) * Nx] + u[l+1 + m * Nx] + u[l-1 + m * Nx]) + coeffs[4] * uPrev[l + m * Nx] + coeffs[5] * (uPrev[l + (m-1) * Nx] + uPrev[l + (m+1) * Nx] + uPrev[l+1 + m * Nx] + uPrev[l-1 + m * Nx]);} }";
+    FILE *fd= fopen("code.c", "w");
+    
+    fprintf(fd, "#include <stdio.h>\n"
+            "void updateEq(double* uNext, double* u, double* uPrev, double* coeffs, int Nx, int Ny)\n"
+            "{\n"
+            "%s\n"
+            "}", eq);
+    fclose(fd);
+
+    system ("clang -shared -undefined dynamic_lookup -O3 -o generated.so code.c -g");
+    handle = dlopen ("generated.so", RTLD_LAZY);
+   
+    if (!handle)
+    {
+        fprintf (stderr, "%s\n", dlerror());
+        exit(1);
+    }
+    
+    dlerror();    /* Clear any existing error */
+    
+    *(void **)(&updateEq) = dlsym (handle, "updateEq"); // second argument finds function name
+    
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s\n", error);
+        exit(1);
+    }
+}

@@ -19,7 +19,7 @@ MembraneAudioProcessorEditor::MembraneAudioProcessorEditor (MembraneAudioProcess
     // editor's size to whatever you need it to be.
     membranes.push_back (processor.getMembranePtr (0));
     addAndMakeVisible (membranes[0]);
-    startTimerHz (10);
+    startTimerHz (60);
     setSize (400, 300);
 }
 
