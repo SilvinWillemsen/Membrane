@@ -18,7 +18,7 @@ Membrane::Membrane (double cSq, double kappaSq, double sig0, double sig1, double
                                                                                       sig1 (sig1),
                                                                                       k (k), Lx (Lx), Ly (Ly)
 {
-    h = 5.0 * 2.0 * sqrt ((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2) + 4.0 * kappaSq * k * k)) / 2.0);
+    h = 3.0 * 2.0 * sqrt ((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2) + 4.0 * kappaSq * k * k)) / 2.0);
     
 //    h = sqrt((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2.0) + 16 * kappaSq * k * k)) / 2.0);
     
@@ -100,12 +100,12 @@ void Membrane::calculateFDS()
     {
         for (int m = 2; m < Ny - 2; ++m)
         {
-            uNext[l][m] = (B1 * u[l][m]
-                           + B2 * (u[l+2][m] + u[l-2][m] + u[l][m+2] +  u[l][m-2])
-                           + B3 * (u[l+1][m+1] + u[l+1][m-1] + u[l-1][m+1] +  u[l-1][m-1])
-                           + B4 * (u[l+1][m] + u[l-1][m] + u[l][m+1] +  u[l][m-1])
-                           + C1 * uPrev[l][m]
-                           + C2 * (uPrev[l+1][m] + uPrev[l-1][m] + uPrev[l][m+1] + uPrev[l][m-1]));
+            uNext[l][m] = B1 * u[l][m]
+                        + B2 * (u[l+2][m] + u[l-2][m] + u[l][m+2] +  u[l][m-2])
+                        + B3 * (u[l+1][m+1] + u[l+1][m-1] + u[l-1][m+1] +  u[l-1][m-1])
+                        + B4 * (u[l+1][m] + u[l-1][m] + u[l][m+1] +  u[l][m-1])
+                        + C1 * uPrev[l][m]
+                        + C2 * (uPrev[l+1][m] + uPrev[l-1][m] + uPrev[l][m+1] + uPrev[l][m-1]);
         }
     }
     
