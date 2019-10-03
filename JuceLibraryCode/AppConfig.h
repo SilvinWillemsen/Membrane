@@ -451,6 +451,15 @@
 #ifndef  JucePlugin_IAAName
  #define JucePlugin_IAAName                "yourcompany: Membrane"
 #endif
+#ifndef  JucePlugin_MaxNumInputChannels
+ #define JucePlugin_MaxNumInputChannels    2
+#endif
+#ifndef  JucePlugin_MaxNumOutputChannels
+ #define JucePlugin_MaxNumOutputChannels   2
+#endif
+#ifndef  JucePlugin_PreferredChannelConfigurations
+ #define JucePlugin_PreferredChannelConfigurations  {2,2}
+#endif
 
 //==============================================================================
 #ifndef    JUCE_STANDALONE_APPLICATION

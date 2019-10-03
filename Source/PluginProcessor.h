@@ -57,15 +57,22 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     ////
-    Membrane* getMembranePtr (int idx) { return membranes[idx]; };
+    Membrane* getMembranePtr() { return &membrane; };
     
     double clamp (double val, double min, double max);
+    
+    void changeMembraneTension (int idx, double val) { membrane.setTension (val); };
+    
+    void changeSig0 (int idx, double val) { membrane.setSig0 (val); };
+    void changeSig1 (int idx, double val) { membrane.setSig1 (val); };
+    
+    long getProcessorIdx() { return processorIdx; };
     
 private:
     //==============================================================================
     
     double fs = 0;
-    
-    OwnedArray<Membrane> membranes; // heap stuff might not work with unity
+    long processorIdx = 1234;
+    Membrane membrane {80.0, 10, 0.001, 1.831501831501832e-05, 5.0, 0.005, 1.0 / 44100.0, 0.3, 0.3};
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MembraneAudioProcessor)
 };
