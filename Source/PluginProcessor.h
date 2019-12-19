@@ -68,11 +68,21 @@ public:
     
     long getProcessorIdx() { return processorIdx; };
     
+    void exciteMembrane() { membrane.setExcited(); };
+    
 private:
     //==============================================================================
     
     double fs = 0;
     long processorIdx = 1234;
-    Membrane membrane {80.0, 10, 0.001, 1.831501831501832e-05, 5.0, 0.005, 1.0 / 44100.0, 0.3, 0.3};
+    Membrane membrane { 400.0, 10, 0.001, 0, 15.0, 0.005, 1.0 / 44100.0, 1.0, 1.0 };
+    
+    AudioParameterFloat* gain;
+    AudioParameterFloat* tension;
+    AudioParameterFloat* sig0;
+//    AudioParameterFloat* sig1;
+    AudioParameterFloat* excite;
+    
+    bool excitedFlag = false;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MembraneAudioProcessor)
 };

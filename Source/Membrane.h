@@ -45,15 +45,22 @@ public:
     void createUpdateEq();
     
     double getMaxT() { return Tinit; };
+    double getMaxSize() { return LxInit; };
     double getMaxSig0() { return sig0Init; };
     double getMaxSig1() { return sig1Init; };
     int getMaxExcitationWidth () { return maxExcitationWidth; };
     
     void setTension (double newTension);
+    void setTensionFromSize (double Lx);
+
     void setSig0 (double newSig0);
     void setSig1 (double newSig1);
     void setExcitationWidth (int newWidth) { excitationWidth = newWidth; };
+    
+    double getTension() { return T; };
+    double getSig0() { return sig0; };
     double getSig1() { return sig1; };
+    
     void changeDamping();
     void updateParams();
     
@@ -81,8 +88,11 @@ public:
 //        }
         
     };
+    
+    void setExcitationGain (double val) { excitationGain = val; };
+    
 private:
-    double Tinit, sig0Init, sig1Init, T, rho, H;
+    double Tinit, sig0Init, sig1Init, T, rho, H, LxInit;
     double cSq, kappaSq, E, nu, sig0, sig1, Lx, Ly; // material values
     double lambdaSq, muSq; // courant stuffs
     double d, A1, B1, B2, B3, B4, C, C1, C2;
@@ -116,6 +126,7 @@ private:
     int N;
     double h;
     
+    
     int numTimeSteps = 3;
     
     bool excited = false;
@@ -131,10 +142,12 @@ private:
     int64 excitationTime = 0;
     double alpha = 0.01;
     
-    int maxExcitationWidth = 4;
+    int maxExcitationWidth = 10;
     int excitationWidth;
     
     bool update = true;
     bool shouldBeZero = true;
+    
+    double excitationGain = 1.0;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Membrane)
 };

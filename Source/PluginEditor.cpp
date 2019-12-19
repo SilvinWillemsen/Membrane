@@ -40,19 +40,15 @@ MembraneAudioProcessorEditor::MembraneAudioProcessorEditor (MembraneAudioProcess
     excitationWidthSlider->addListener (this);
     addAndMakeVisible (excitationWidthSlider);
 
-    buttons.add(new TextButton ("Excite"));
-    exciteButton = buttons[buttons.size() - 1];
-    exciteButton->addListener (this);
-    addAndMakeVisible (exciteButton);
-    graphicsFlag = true;
-
-    buttons.add(new TextButton ("Update"));
-    updateButton = buttons[buttons.size() - 1];
-    updateButton->addListener (this);
-    addAndMakeVisible (updateButton);
-
+    // specify here on which UDP port number to receive incoming OSC messages
+    if (! connect (7563))                   // [3]
+        showConnectionErrorMessage ("Error: could not connect to UDP port 7563.");
+    
+    // tell the component to listen for OSC messages matching this address:
+    addListener (this, "/message"); // [4]
+    
     startTimerHz (60);
-    setSize (400, 300);
+    setSize (800, 600);
 }
 
 MembraneAudioProcessorEditor::~MembraneAudioProcessorEditor()
@@ -65,8 +61,8 @@ void MembraneAudioProcessorEditor::paint (Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
     g.setColour (Colours::white);
-    exciteButton->setButtonText (String (processor.getProcessorIdx()));
-//    g.drawText ("Iteration " + String(iteration), getWidth() / 2.0, getHeight() / 2.0, 200, 200, Justification::centred);
+//    exciteButton->setButtonText (String (processor.getProcessorIdx()));
+    g.drawText ("Iteration " + String(iteration), getWidth() / 2.0, getHeight() / 2.0, 200, 200, Justification::centred);
 }
 
 void MembraneAudioProcessorEditor::resized()
@@ -83,7 +79,7 @@ void MembraneAudioProcessorEditor::resized()
             buttons[i - sliders.size()]->setBounds (controlArea.removeFromLeft (static_cast<int>(getWidth()) / static_cast<int>(totSlidersButtons)));
         controlArea.removeFromLeft(margin);
     }
-    
+
     if (membrane != nullptr)
         membrane->setBounds (totArea);
 }
@@ -93,15 +89,17 @@ void MembraneAudioProcessorEditor::timerCallback()
     if (updateIteration)
         iteration++;
 //    double val = static_cast<double> (iteration % 255) / 127.0 - 1.0;
-    if (iteration % 100 == 0)
-        membrane->setExcited();
+//    if (iteration % 100 == 0)
+//        membrane->setExcited();
     if (init)
     {
         if (membrane != nullptr)
         {
             init = false;
             addAndMakeVisible (*membrane);
-            tensionSlider->setRange (1, membrane->getMaxT());
+//            tensionSlider->setRange (1, membrane->getMaxT());
+//            tensionSlider->setValue (membrane->getMaxT());
+            tensionSlider->setRange (0.1, membrane->getMaxT(), 0.001);
             tensionSlider->setValue (membrane->getMaxT());
             sig0Slider->setRange (0.0, membrane->getMaxSig0());
             sig0Slider->setValue (membrane->getMaxSig0());
@@ -115,6 +113,8 @@ void MembraneAudioProcessorEditor::timerCallback()
     {
         membrane->changeDamping();
         sliders[2]->setValue (membrane->getSig1());
+//        sliders[1]->setValue (membrane->getSig0());
+//        sliders[0]->setValue (membrane->getTension());
     }
 //    if (graphicsFlag)
         repaint();
@@ -126,11 +126,14 @@ void MembraneAudioProcessorEditor::sliderValueChanged(Slider* slider)
     {
         if (slider == tensionSlider)
         {
-            membrane->setTension (slider->getValue());
+//            membrane->setTensionFromSize (slider->getValue());
+            membrane->setTension(slider->getValue());
+//            membrane->setSig0 (membrane->getTension() / 400.0 * 15.0);
         }
         else if (slider == sig0Slider)
         {
             membrane->setSig0 (slider->getValue());
+//            membrane->setTensionFromSize(slider->getValue() / 15.0);
         }
         else if (slider == sig1Slider)
         {
@@ -145,11 +148,11 @@ void MembraneAudioProcessorEditor::sliderValueChanged(Slider* slider)
 
 void MembraneAudioProcessorEditor::buttonClicked (Button* button)
 {
-    if (button == exciteButton)
-    {
-        membrane->setExcited();
-        updateIteration = !updateIteration;
-    }
-    else if (button == updateButton && membrane != nullptr)
-        membrane->setUpdate (true);
+//    if (button == exciteButton)
+//    {
+//        membrane->setExcited();
+//        updateIteration = !updateIteration;
+//    }
+//    else if (button == updateButton && membrane != nullptr)
+//        membrane->setUpdate (true);
 }

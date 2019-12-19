@@ -26,23 +26,16 @@ Membrane::Membrane (double T, double rho, double H, double kappaSq, double sig0,
     
     sig0 = 0;
     Tinit = T;
+    LxInit = Lx;
     cSq = T / (rho * H);
     h = 4.0 * 2.0 * sqrt ((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2) + 4.0 * kappaSq * k * k)) / 2.0);
-    
-//    h = sqrt((cSq * k * k + 4.0 * sig1 * k + sqrt(pow(cSq * k * k + 4.0 * sig1 * k, 2.0) + 16 * kappaSq * k * k)) / 2.0);
-    
-//    h = 0.062;
+
     Nx = floor (Lx/h);
     Ny = floor (Ly/h);
     h = Lx > Ly ? Lx / Nx : Ly / Ny;
     N = (Nx - 1) * (Ny - 1);
-//    N = floor (aspectRatio / (h * h));
-    
-//    h = 1.0 / sqrt (N);
-//    Nx = floor(sqrt (aspectRatio) / h);
-//    Ny = floor(1.0 / (sqrt (aspectRatio) * h));
-    
-    
+    T = (pow(0.5 * Lx / static_cast<float>(Nx), 2) - 4.0 * sig1 * k) * rho * H / (k * k);
+
 #ifdef ONEDVEC
 //    for (int i = 0; i < numTimeSteps; ++i)
 //        uVecs.push_back (std::vector<double> (N, 0));
@@ -240,7 +233,7 @@ void Membrane::excite()
         {
             for (int j = 1; j < excitationWidth; ++j)
             {
-                excitationArea[i][j] = 10.0 / (excitationWidth * excitationWidth) * 0.25 * (1 - cos(2.0 * double_Pi * i / static_cast<int>(excitationWidth+1))) * (1 - cos(2.0 * double_Pi * j / static_cast<int>(excitationWidth+1)));
+                excitationArea[i][j] = excitationGain * 10.0 / (excitationWidth * excitationWidth) * 0.25 * (1 - cos(2.0 * double_Pi * i / static_cast<int>(excitationWidth+1))) * (1 - cos(2.0 * double_Pi * j / static_cast<int>(excitationWidth+1)));
             }
         }
         
@@ -403,6 +396,22 @@ void Membrane::setTension (double newTension)
     T = newTension;
     cSq = T / (rho * H);
     lambdaSq = cSq * k * k / (h * h);
+    updateParams();
+#ifdef ONEDVEC
+    coeffs[0] = B1;
+    coeffs[3] = B4;
+#endif
+}
+
+void Membrane::setTensionFromSize (double newLx)
+{
+    Lx = newLx;
+    Ly = newLx;
+    h = Lx / static_cast<float> (Nx);
+    T = (pow(0.5 * Lx / static_cast<float>(Nx), 2) - 4.0 * sig1 * k) * rho * H / (k * k);
+    cSq = T / (rho * H);
+    lambdaSq = cSq * k * k / (h * h);
+    muSq = kappaSq * k * k / (h * h * h * h);
     updateParams();
 #ifdef ONEDVEC
     coeffs[0] = B1;

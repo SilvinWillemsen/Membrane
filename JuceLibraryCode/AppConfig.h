@@ -62,6 +62,7 @@
 #define JUCE_MODULE_AVAILABLE_juce_gui_basics               1
 #define JUCE_MODULE_AVAILABLE_juce_gui_extra                1
 #define JUCE_MODULE_AVAILABLE_juce_opengl                   1
+#define JUCE_MODULE_AVAILABLE_juce_osc                      1
 #define JUCE_MODULE_AVAILABLE_juce_video                    1
 
 #define JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED 1
@@ -213,7 +214,7 @@
 #endif
 
 #ifndef    JUCE_USE_CURL
- //#define JUCE_USE_CURL 0
+ //#define JUCE_USE_CURL 1
 #endif
 
 #ifndef    JUCE_LOAD_CURL_SYMBOLS_LAZILY
@@ -221,11 +222,11 @@
 #endif
 
 #ifndef    JUCE_CATCH_UNHANDLED_EXCEPTIONS
- //#define JUCE_CATCH_UNHANDLED_EXCEPTIONS 1
+ //#define JUCE_CATCH_UNHANDLED_EXCEPTIONS 0
 #endif
 
 #ifndef    JUCE_ALLOW_STATIC_NULL_VARIABLES
- //#define JUCE_ALLOW_STATIC_NULL_VARIABLES 1
+ //#define JUCE_ALLOW_STATIC_NULL_VARIABLES 0
 #endif
 
 #ifndef    JUCE_STRICT_REFCOUNTEDPOINTER
@@ -450,6 +451,12 @@
 #endif
 #ifndef  JucePlugin_IAAName
  #define JucePlugin_IAAName                "yourcompany: Membrane"
+#endif
+#ifndef  JucePlugin_VSTNumMidiInputs
+ #define JucePlugin_VSTNumMidiInputs       16
+#endif
+#ifndef  JucePlugin_VSTNumMidiOutputs
+ #define JucePlugin_VSTNumMidiOutputs      16
 #endif
 #ifndef  JucePlugin_MaxNumInputChannels
  #define JucePlugin_MaxNumInputChannels    2
