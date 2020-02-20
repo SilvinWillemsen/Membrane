@@ -1,10 +1,6 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <dlfcn.h>
-#include <string.h>
 //==============================================================================
 /*
  */
@@ -41,9 +37,7 @@ public:
     
     void setExcited(float amp = 1.0) { excited = true; excitationGain = amp; };
     bool isExcited() { return excited; };
-    
-    void createUpdateEq();
-    
+        
     double getMaxT() { return Tinit; };
     double getMaxSize() { return LxInit; };
     double getMaxSig0() { return sig0Init; };

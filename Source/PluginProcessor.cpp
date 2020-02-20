@@ -193,6 +193,8 @@ void MembraneAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffe
         channelDataL[i] = clamp (membrane.getOutput (0.7, 0.5), -1.0, 1.0);
         channelDataR[i] = channelDataL[i];
     }
+	Logger::getCurrentLogger()->outputDebugString(String(Time::getCurrentTime().toISO8601(false)));
+
 }
 
 //==============================================================================

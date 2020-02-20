@@ -334,63 +334,6 @@ void Membrane::mouseUp (const MouseEvent &e)
 {
 }
 
-void Membrane::createUpdateEq()
-{
-    void *handle;
-    char *error;
-
-    // convert updateEqString to char
-    
-    std::hash<int64> hasher;
-    auto newName = hasher (juce::Time::getCurrentTime().toMilliseconds());
-    
-    FILE *fd= fopen("code.c", "w");
-    
-    const char* eq =
-    " for (int l = 2; l < Nx - 2; ++l)\n"
-    "{ \n"
-    "for (int m = 2; m < Ny - 2; ++m)\n"
-    "{ \n"
-    "uNext[l + m * Nx] ="
-    "   coeffs[0] * u[l + m * Nx]"
-    " + coeffs[1] * (u[l+2 + m * Nx] + u[l-2 + m * Nx] + u[l + (m+2) * Nx] + u[l + (m-2) * Nx])"
-    " + coeffs[2] * (u[l+1 + (m+1) * Nx] + u[l-1 + (m-1) * Nx] + u[l+1 + (m-1) * Nx] + u[l-1 + (m+1) * Nx])"
-    " + coeffs[3] * (u[l+1 + m * Nx] + u[l-1 + m * Nx] + u[l + (m+1) * Nx] + u[l + (m-1) * Nx])"
-    " + coeffs[4] * uPrev[l + m * Nx]"
-    " + coeffs[5] * (uPrev[l+1 + m * Nx] + uPrev[l-1 + m * Nx] + uPrev[l + (m+1) * Nx] + uPrev[l + (m-1) * Nx]);\n"
-    "} \n"
-    "}";
-    
-    fprintf(fd, "#include <stdio.h>\n"
-            "void updateEq(double* uNext, double* u, double* uPrev, double* coeffs, int Nx, int Ny)\n"
-            "{\n"
-            "%s\n"
-            "}", eq);
-    fclose(fd);
-    
-    String systemInstr;
-    
-    // if this object is new (has not been edited yet) delete the previous file
-    systemInstr = String ("clang -shared -undefined dynamic_lookup -O3 -o " + String (newName) + ".so code.c -g");
-    system (toConstChar (systemInstr));
-    handle = dlopen (toConstChar (String (String (newName) + ".so")), RTLD_LAZY);
-   
-    if (!handle)
-    {
-        fprintf (stderr, "%s\n", dlerror());
-        exit(1);
-    }
-    
-    dlerror();    /* Clear any existing error */
-    
-    *(void **)(&updateEq) = dlsym (handle, "updateEq"); // second argument finds function name
-    
-    if ((error = dlerror()) != NULL)  {
-        fprintf (stderr, "%s\n", error);
-        exit(1);
-    }
-}
-
 void Membrane::setTension (double newTension)
 {
     T = newTension;

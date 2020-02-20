@@ -47,7 +47,6 @@ private:
             {
                 outputMessage = message[0].getFloat32();
             } else if (prevMessage != 0) {
-                std::cout << prevMessage << ", " << outputMessage << ", " << message[0].getFloat32() << std::endl;
                 processor.exciteMembrane (outputMessage * inputScaling);
             }
                 
