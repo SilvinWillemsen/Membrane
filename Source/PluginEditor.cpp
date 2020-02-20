@@ -44,6 +44,7 @@ MembraneAudioProcessorEditor::MembraneAudioProcessorEditor (MembraneAudioProcess
     if (! connect (7563))                   // [3]
         showConnectionErrorMessage ("Error: could not connect to UDP port 7563.");
     
+    
     // tell the component to listen for OSC messages matching this address:
     addListener (this, "/message"); // [4]
     

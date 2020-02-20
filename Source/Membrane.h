@@ -39,7 +39,7 @@ public:
     void mouseDrag (const MouseEvent& e) override;
     void mouseUp (const MouseEvent& e) override;
     
-    void setExcited() { excited = true; };
+    void setExcited(float amp = 1.0) { excited = true; excitationGain = amp; };
     bool isExcited() { return excited; };
     
     void createUpdateEq();

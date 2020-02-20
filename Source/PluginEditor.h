@@ -43,10 +43,14 @@ private:
     {
         if (message.size() == 1)                       // [5]
         {
-            if (prevMessage == 0 && message[0].getFloat32() != 0)
+            if (prevMessage < message[0].getFloat32())// && message[0].getFloat32() != 0)
             {
-                processor.exciteMembrane();
+                outputMessage = message[0].getFloat32();
+            } else if (prevMessage != 0) {
+                std::cout << prevMessage << ", " << outputMessage << ", " << message[0].getFloat32() << std::endl;
+                processor.exciteMembrane (outputMessage * inputScaling);
             }
+                
             prevMessage = message[0].getFloat32();
         }
     }
@@ -81,5 +85,7 @@ private:
     bool updateIteration = true;
     
     float prevMessage;
+    float outputMessage;
+    float inputScaling = 10.0;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MembraneAudioProcessorEditor)
 };

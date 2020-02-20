@@ -68,7 +68,7 @@ public:
     
     long getProcessorIdx() { return processorIdx; };
     
-    void exciteMembrane() { membrane.setExcited(); };
+    void exciteMembrane(float amp) { membrane.setExcited (amp); };
     
 private:
     //==============================================================================

@@ -33,9 +33,6 @@ MembraneAudioProcessor::MembraneAudioProcessor()
 
 MembraneAudioProcessor::~MembraneAudioProcessor()
 {
-    system("rm *.so");
-    system("rm -rf *.so.dSYM");
-    system("rm code.c");
 }
 
 //==============================================================================
