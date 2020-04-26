@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="TFh86e" name="Membrane" projectType="audioplug" jucerVersion="5.4.1"
+<JUCERPROJECT id="TFh86e" name="Membrane" projectType="audioplug" jucerVersion="5.4.7"
               pluginFormats="buildStandalone,buildUnity" pluginCharacteristicsValue="pluginIsSynth"
               pluginChannelConfigs="{2,2}">
   <MAINGROUP id="QaBHxA" name="Membrane">

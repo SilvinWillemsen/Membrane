@@ -45,6 +45,10 @@
 			isa = PBXBuildFile;
 			fileRef = 7E9DCADF70246F58AF3FDD4A;
 		};
+		A7DD44F512907D546E194571 = {
+			isa = PBXBuildFile;
+			fileRef = CA4823A490903AFBAA4DFF8D;
+		};
 		C67BCFB785EBEFAEA9BBDFD9 = {
 			isa = PBXBuildFile;
 			fileRef = 8F03551479C3D4E78B2693DF;
@@ -305,13 +309,6 @@
 			path = libMembrane.a;
 			sourceTree = "BUILT_PRODUCTS_DIR";
 		};
-		443A8999A74A785183F42AC3 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
-			name = Membrane.entitlements;
-			path = Membrane.entitlements;
-			sourceTree = "SOURCE_ROOT";
-		};
 		4F55CA9CE662B79B57F04AA2 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -522,6 +519,13 @@
 			path = System/Library/Frameworks/AVKit.framework;
 			sourceTree = SDKROOT;
 		};
+		CA4823A490903AFBAA4DFF8D = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = CoreAudioKit.framework;
+			path = System/Library/Frameworks/CoreAudioKit.framework;
+			sourceTree = SDKROOT;
+		};
 		CF2F943138A0ACD3ABAC9211 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -697,6 +701,7 @@
 				EE7439BB4469747247332452,
 				4F55CA9CE662B79B57F04AA2,
 				7E9DCADF70246F58AF3FDD4A,
+				CA4823A490903AFBAA4DFF8D,
 				8F03551479C3D4E78B2693DF,
 				82DAE85B9D7758C998583CD0,
 				B8C05648BB5BFAE7A3FA5165,
@@ -721,7 +726,6 @@
 		C26415286E7BCB0744C0D975 = {
 			isa = PBXGroup;
 			children = (
-				443A8999A74A785183F42AC3,
 				10BB5CE148A38E4A5BBBC529,
 				1C4638990B34A251ECDDF266,
 				9DB52AC1EE549A4458758A7F,
@@ -736,6 +740,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -743,6 +748,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -752,6 +758,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
 				COPY_PHASE_STRIP = NO;
@@ -795,6 +802,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
 				DEAD_CODE_STRIPPING = YES;
@@ -840,6 +848,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
 				COPY_PHASE_STRIP = NO;
@@ -886,6 +895,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
 				DEAD_CODE_STRIPPING = YES;
@@ -934,6 +944,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
 				COPY_PHASE_STRIP = NO;
@@ -977,6 +988,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)";
 				DEAD_CODE_STRIPPING = YES;
@@ -1038,7 +1050,8 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf";
+				CODE_SIGN_IDENTITY = "";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = c11;
@@ -1057,7 +1070,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "Membrane";
-				WARNING_CFLAGS = -Wreorder;
+				SDKROOT = macosx;
+				WARNING_CFLAGS = "-Wreorder";
 				ZERO_LINK = NO;
 			};
 			name = Debug;
@@ -1084,7 +1098,8 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf";
+				CODE_SIGN_IDENTITY = "";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
@@ -1101,7 +1116,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PRODUCT_NAME = "Membrane";
-				WARNING_CFLAGS = -Wreorder;
+				SDKROOT = macosx;
+				WARNING_CFLAGS = "-Wreorder";
 				ZERO_LINK = NO;
 			};
 			name = Release;
@@ -1185,6 +1201,7 @@
 				2C22A98A00C8AE1EBC5D094A,
 				30E51A2AFEDAADE5A1144485,
 				1CD2E6C872D356D532F93CA7,
+				A7DD44F512907D546E194571,
 				C67BCFB785EBEFAEA9BBDFD9,
 				F33C73FCB54472ADE0F2BB6F,
 				307C6FE3F53EF9A1C65F17D3,
@@ -1248,6 +1265,7 @@
 				2C22A98A00C8AE1EBC5D094A,
 				30E51A2AFEDAADE5A1144485,
 				1CD2E6C872D356D532F93CA7,
+				A7DD44F512907D546E194571,
 				C67BCFB785EBEFAEA9BBDFD9,
 				F33C73FCB54472ADE0F2BB6F,
 				307C6FE3F53EF9A1C65F17D3,
@@ -1267,7 +1285,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			name = "Embed Unity Script";
 			dstPath = "";
-			dstSubfolderSpec = 1;
+			dstSubfolderSpec = 7;
 		};
 		94B09CBAAB8D81D9F3865004 = {
 			isa = PBXNativeTarget;
@@ -1338,13 +1356,14 @@
 		B775DDC2079879A0CA48A443 = {
 			isa = PBXProject;
 			buildConfigurationList = D7A1BC06D4BB6C9A96407B68;
-			attributes = { LastUpgradeCheck = 0930; ORGANIZATIONNAME = ""; TargetAttributes = { 58AC88BF08622D514246EA46 = { SystemCapabilities = {com.apple.ApplicationGroups.iOS = { enabled = 0; }; com.apple.InAppPurchase = { enabled = 0; }; com.apple.InterAppAudio = { enabled = 0; }; com.apple.Push = { enabled = 0; }; com.apple.Sandbox = { enabled = 0; }; }; };AD80C8FAC7021B470C7C81ED = { SystemCapabilities = {com.apple.ApplicationGroups.iOS = { enabled = 0; }; com.apple.InAppPurchase = { enabled = 0; }; com.apple.InterAppAudio = { enabled = 0; }; com.apple.Push = { enabled = 0; }; com.apple.Sandbox = { enabled = 0; }; }; };94B09CBAAB8D81D9F3865004 = { SystemCapabilities = {com.apple.ApplicationGroups.iOS = { enabled = 0; }; com.apple.InAppPurchase = { enabled = 0; }; com.apple.InterAppAudio = { enabled = 0; }; com.apple.Push = { enabled = 0; }; com.apple.Sandbox = { enabled = 0; }; }; };83AD1985CC032D0B0E65CA1D = { SystemCapabilities = {com.apple.ApplicationGroups.iOS = { enabled = 0; }; com.apple.InAppPurchase = { enabled = 0; }; com.apple.InterAppAudio = { enabled = 0; }; com.apple.Push = { enabled = 0; }; com.apple.Sandbox = { enabled = 0; }; }; }; }; };
+			attributes = { LastUpgradeCheck = 1100; ORGANIZATIONNAME = ""; TargetAttributes = { 58AC88BF08622D514246EA46 = { SystemCapabilities = {com.apple.ApplicationGroups.iOS = { enabled = 0; }; com.apple.InAppPurchase = { enabled = 0; }; com.apple.InterAppAudio = { enabled = 0; }; com.apple.Push = { enabled = 0; }; com.apple.Sandbox = { enabled = 0; }; com.apple.HardenedRuntime = { enabled = 0; }; }; };AD80C8FAC7021B470C7C81ED = { SystemCapabilities = {com.apple.ApplicationGroups.iOS = { enabled = 0; }; com.apple.InAppPurchase = { enabled = 0; }; com.apple.InterAppAudio = { enabled = 0; }; com.apple.Push = { enabled = 0; }; com.apple.Sandbox = { enabled = 0; }; com.apple.HardenedRuntime = { enabled = 0; }; }; };94B09CBAAB8D81D9F3865004 = { SystemCapabilities = {com.apple.ApplicationGroups.iOS = { enabled = 0; }; com.apple.InAppPurchase = { enabled = 0; }; com.apple.InterAppAudio = { enabled = 0; }; com.apple.Push = { enabled = 0; }; com.apple.Sandbox = { enabled = 0; }; com.apple.HardenedRuntime = { enabled = 0; }; }; };83AD1985CC032D0B0E65CA1D = { SystemCapabilities = {com.apple.ApplicationGroups.iOS = { enabled = 0; }; com.apple.InAppPurchase = { enabled = 0; }; com.apple.InterAppAudio = { enabled = 0; }; com.apple.Push = { enabled = 0; }; com.apple.Sandbox = { enabled = 0; }; com.apple.HardenedRuntime = { enabled = 0; }; }; }; }; };
 			compatibilityVersion = "Xcode 3.2";
 			hasScannedForEncodings = 0;
 			mainGroup = C26415286E7BCB0744C0D975;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (58AC88BF08622D514246EA46, AD80C8FAC7021B470C7C81ED, 94B09CBAAB8D81D9F3865004, 83AD1985CC032D0B0E65CA1D);
+			knownRegions = (en, Base);
 		};
 	};
 	rootObject = B775DDC2079879A0CA48A443;

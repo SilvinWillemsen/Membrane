@@ -52,7 +52,7 @@ MembraneAudioProcessorEditor::MembraneAudioProcessorEditor (MembraneAudioProcess
     addAndMakeVisible (updateButton);
 
     startTimerHz (60);
-    setSize (400, 300);
+    setSize (800, 300);
 }
 
 MembraneAudioProcessorEditor::~MembraneAudioProcessorEditor()
@@ -90,11 +90,11 @@ void MembraneAudioProcessorEditor::resized()
 
 void MembraneAudioProcessorEditor::timerCallback()
 {
-    if (updateIteration)
-        iteration++;
+//    if (updateIteration)
+//        iteration++;
 //    double val = static_cast<double> (iteration % 255) / 127.0 - 1.0;
-    if (iteration % 100 == 0)
-        membrane->setExcited();
+//    if (iteration % 100 == 0)
+//        membrane->setExcited();
     if (init)
     {
         if (membrane != nullptr)

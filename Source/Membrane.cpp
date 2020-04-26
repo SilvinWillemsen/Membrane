@@ -246,21 +246,24 @@ void Membrane::excite()
         
         int startIdX = clamp(idX - excitationWidth * 0.5, 2, Nx-3 - excitationWidth);
         int startIdY = clamp(idY - excitationWidth * 0.5, 2, Ny-3 - excitationWidth);
-        
-        for (int i = 1; i < excitationWidth; ++i)
-        {
-            for (int j = 1; j < excitationWidth; ++j)
-            {
-#ifdef ONEDVEC
-                u[static_cast<int> (i + startIdX + Nx * (j + startIdY))] += excitationArea[i][j];
-                uPrev[static_cast<int> (i + startIdX + Nx * (j + startIdY))] += excitationArea[i][j];
-#else
-                u[i + startIdX][j + startIdY] += excitationArea[i][j];
-                uPrev[i + startIdX][j + startIdY] += excitationArea[i][j];
-#endif
-            }
-        }
-//        uPrev[static_cast<int> (clamp(idX, 2, Nx-3))][static_cast<int> (clamp(idY, 2, Ny-3))] += 1.0;        
+//
+//        for (int i = 1; i < excitationWidth; ++i)
+//        {
+//            for (int j = 1; j < excitationWidth; ++j)
+//            {
+//#ifdef ONEDVEC
+//                u[static_cast<int> (i + startIdX + Nx * (j + startIdY))] += excitationArea[i][j];
+//                uPrev[static_cast<int> (i + startIdX + Nx * (j + startIdY))] += excitationArea[i][j];
+//#else
+//                u[i + startIdX][j + startIdY] += excitationArea[i][j];
+//                uPrev[i + startIdX][j + startIdY] += excitationArea[i][j];
+                u[7][7] += 1.0;
+                uPrev[7][7] += 1.0;
+
+//#endif
+//            }
+//        }
+//        uPrev[static_cast<int> (clamp(idX, 2, Nx-3))][static_cast<int> (clamp(idY, 2, Ny-3))] += 1.0;
     }
 }
 
@@ -325,6 +328,8 @@ void Membrane::mouseDown (const MouseEvent &e)
     int stateHeight = getHeight() / static_cast<double> (Ny - 4);
     idX = e.x / stateWidth + 2;
     idY = e.y / stateHeight + 2;
+    idX = 7;
+    idY = 7;
     
 }
 void Membrane::mouseDrag (const MouseEvent& e)
@@ -333,7 +338,8 @@ void Membrane::mouseDrag (const MouseEvent& e)
     int stateHeight = getHeight() / static_cast<double> (Ny - 4);
     idX = e.x / static_cast<double>(stateWidth) + 2;
     idY = e.y / static_cast<double>(stateHeight) + 2;
-    
+    idX = 7;
+    idY = 7;
     excited = true;
 }
 
