@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AD80C8FAC7021B470C7C81ED"
-               BuildableName = "Membrane.app"
+               BuildableName = ".app"
                BlueprintName = "Membrane - Standalone Plugin"
                ReferencedContainer = "container:Membrane.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AD80C8FAC7021B470C7C81ED"
-            BuildableName = "Membrane.app"
+            BuildableName = ".app"
             BlueprintName = "Membrane - Standalone Plugin"
             ReferencedContainer = "container:Membrane.xcodeproj">
          </BuildableReference>
@@ -56,7 +56,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AD80C8FAC7021B470C7C81ED"
-            BuildableName = "Membrane.app"
+            BuildableName = ".app"
             BlueprintName = "Membrane - Standalone Plugin"
             ReferencedContainer = "container:Membrane.xcodeproj">
          </BuildableReference>
@@ -75,7 +75,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AD80C8FAC7021B470C7C81ED"
-            BuildableName = "Membrane.app"
+            BuildableName = ".app"
             BlueprintName = "Membrane - Standalone Plugin"
             ReferencedContainer = "container:Membrane.xcodeproj">
          </BuildableReference>

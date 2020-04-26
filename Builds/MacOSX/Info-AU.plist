@@ -42,13 +42,6 @@
         <string>Tfh8</string>
         <key>version</key>
         <integer>65536</integer>
-        <key>resourceUsage</key>
-        <dict>
-          <key>network.client</key>
-          <true/>
-          <key>temporary-exception.files.all.read-write</key>
-          <true/>
-        </dict>
       </dict>
     </array>
   </dict>

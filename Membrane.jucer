@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="TFh86e" name="Membrane" projectType="audioplug" jucerVersion="5.3.2"
+<JUCERPROJECT id="TFh86e" name="Membrane" projectType="audioplug" jucerVersion="5.2.0"
               pluginFormats="buildStandalone,buildUnity" pluginCharacteristicsValue="pluginIsSynth"
-              pluginChannelConfigs="{2,2}">
+              pluginChannelConfigs="{2,2}" displaySplashScreen="1" reportAppUsage="1"
+              splashScreenColour="Dark" version="1.0.0" buildVST="0" buildVST3="0"
+              buildAU="0" buildAUv3="0" buildRTAS="0" buildAAX="0" buildStandalone="1"
+              enableIAA="0" pluginName="Membrane" pluginDesc="Membrane" pluginManufacturer="yourcompany"
+              pluginManufacturerCode="Manu" pluginCode="Tfh8" pluginIsSynth="0"
+              pluginWantsMidiIn="0" pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0"
+              pluginEditorRequiresKeys="0" pluginAUExportPrefix="MembraneAU"
+              pluginRTASCategory="" bundleIdentifier="com.yourcompany.Membrane"
+              aaxIdentifier="com.yourcompany.Membrane" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
+              includeBinaryInAppConfig="1" cppLanguageStandard="11" companyCopyright="">
   <MAINGROUP id="QaBHxA" name="Membrane">
     <GROUP id="{761F3AF4-8DE1-4030-6549-B442C60CCC2C}" name="Source">
       <FILE id="S1OrIW" name="Membrane.cpp" compile="1" resource="0" file="Source/Membrane.cpp"/>
@@ -19,8 +28,8 @@
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug"/>
-        <CONFIGURATION isDebug="0" name="Release"/>
+        <CONFIGURATION isDebug="1" name="Debug" enablePluginBinaryCopyStep="1"/>
+        <CONFIGURATION isDebug="0" name="Release" enablePluginBinaryCopyStep="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../newJUCE/JUCE/modules"/>
@@ -43,8 +52,12 @@
     </XCODE_MAC>
     <VS2017 targetFolder="Builds/VisualStudio2017">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug"/>
-        <CONFIGURATION isDebug="0" name="Release"/>
+        <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="x64" debugInformationFormat="ProgramDatabase"
+                       enablePluginBinaryCopyStep="0"/>
+        <CONFIGURATION isDebug="0" name="Release" winWarningLevel="4" generateManifest="1"
+                       winArchitecture="x64" debugInformationFormat="ProgramDatabase"
+                       enablePluginBinaryCopyStep="0" linkTimeOptimisation="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_video" path="../../juce"/>
@@ -89,5 +102,5 @@
     <OSX/>
     <WINDOWS/>
   </LIVE_SETTINGS>
-  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <JUCEOPTIONS/>
 </JUCERPROJECT>
